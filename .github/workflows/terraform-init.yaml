@@ -1,0 +1,35 @@
+# .github/workflows/terraform-init.yaml
+name: Terraform Init (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: false
+        type: string
+        default: './terraform'
+      terraform-version:
+        required: false
+        type: string
+        default: '1.6.6'
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.terraform-version }}
+
+      - name: Terraform Init
+        working-directory: ${{ inputs.working-directory }}
+        run: terraform init
